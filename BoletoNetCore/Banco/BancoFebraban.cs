@@ -117,23 +117,34 @@ namespace BoletoNetCore
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.CNAB240:
-                        return ((IBancoCNAB240)this).GerarTrailerRemessaCNAB240(
+                        trailer += ((IBancoCNAB240)this).GerarTrailerLoteRemessaCNAB240(ref numeroArquivoRemessa,
+                                            numeroRegistroGeral,
+                                            numeroRegistroCobrancaSimples, valorCobrancaSimples,
+                                            numeroRegistroCobrancaVinculada, valorCobrancaVinculada,
+                                            numeroRegistroCobrancaCaucionada, valorCobrancaCaucionada,
+                                            numeroRegistroCobrancaDescontada, valorCobrancaDescontada);
+                        trailer += Environment.NewLine;
+
+                        trailer += ((IBancoCNAB240)this).GerarTrailerRemessaCNAB240(
                                              numeroRegistroGeral, valorBoletoGeral,
                                              numeroRegistroCobrancaSimples,  valorCobrancaSimples,
                                              numeroRegistroCobrancaVinculada,  valorCobrancaVinculada,
                                              numeroRegistroCobrancaCaucionada,  valorCobrancaCaucionada,
                                              numeroRegistroCobrancaDescontada,  valorCobrancaDescontada);
+                        break;
 
                     case TipoArquivo.CNAB400:
-                        return ((IBancoCNAB400)this).GerarTrailerRemessaCNAB400(
+                        trailer += ((IBancoCNAB400)this).GerarTrailerRemessaCNAB400(
                                              numeroRegistroGeral, valorBoletoGeral,
                                              numeroRegistroCobrancaSimples, valorCobrancaSimples,
                                              numeroRegistroCobrancaVinculada, valorCobrancaVinculada,
                                              numeroRegistroCobrancaCaucionada, valorCobrancaCaucionada,
                                              numeroRegistroCobrancaDescontada, valorCobrancaDescontada);
+                        break;
                     default:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
+                return trailer;
             }
             catch (Exception ex)
             {
