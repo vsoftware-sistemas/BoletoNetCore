@@ -14,13 +14,29 @@ namespace BoletoNetCore
 
         public string FormataCodigoBarraCampoLivre(Boleto boleto)
         {
+            //código da cooperativa de crédito/agência beneficiária (aaaa)
+            string agencia = boleto.Banco.Beneficiario.ContaBancaria.Agencia.Trim();
+            if (!string.IsNullOrEmpty(boleto.Banco.Beneficiario.ContaBancaria.DigitoAgencia))
+            {
+                agencia = agencia
+                    + boleto.Banco.Beneficiario.ContaBancaria.DigitoAgencia.Trim();
+            }
+
+            //código do beneficiário (ccccc)
+            string beneficiario = boleto.Banco.Beneficiario.Codigo.Trim();
+            if (!string.IsNullOrEmpty(boleto.Banco.Beneficiario.CodigoDV))
+            {
+                beneficiario = beneficiario
+                    + boleto.Banco.Beneficiario.CodigoDV.Trim();
+            }
+
             string CampoLivre = boleto.Carteira + "1" +
                 boleto.NossoNumero +
-                boleto.Banco.Beneficiario.ContaBancaria.Agencia +
+                agencia.Substring(agencia.Length - 4, 4) +
                 boleto.Banco.Beneficiario.ContaBancaria.OperacaoConta +
-                boleto.Banco.Beneficiario.Codigo + "10";
+                beneficiario + "10";
 
-            CampoLivre += Mod11(CampoLivre); 
+            CampoLivre += Mod11(CampoLivre);
 
             return CampoLivre;
         }
@@ -35,7 +51,7 @@ namespace BoletoNetCore
             boleto.NossoNumeroDV = Mod11(Sequencial(boleto)).ToString();
             boleto.NossoNumero = string.Concat(boleto.NossoNumero, Mod11(Sequencial(boleto)));
 
-            boleto.NossoNumeroFormatado = string.Format("{0}/{1}-{2}", boleto.NossoNumero.Substring(0, 2), boleto.NossoNumero.Substring(2, 6), boleto.NossoNumero.Substring(8));            
+            boleto.NossoNumeroFormatado = string.Format("{0}/{1}-{2}", boleto.NossoNumero.Substring(0, 2), boleto.NossoNumero.Substring(2, 6), boleto.NossoNumero.Substring(8));
         }
 
         public int Mod11(string seq)
@@ -68,7 +84,14 @@ namespace BoletoNetCore
 
         public string Sequencial(Boleto boleto)
         {
-            string agencia = boleto.Banco.Beneficiario.ContaBancaria.Agencia;     //código da cooperativa de crédito/agência beneficiária (aaaa)
+            //código da cooperativa de crédito/agência beneficiária (aaaa)
+            string agencia = boleto.Banco.Beneficiario.ContaBancaria.Agencia.Trim();
+            if (!string.IsNullOrEmpty(boleto.Banco.Beneficiario.ContaBancaria.DigitoAgencia))
+            {
+                agencia = agencia
+                    + boleto.Banco.Beneficiario.ContaBancaria.DigitoAgencia.Trim();
+            }
+            
             string posto = boleto.Banco.Beneficiario.ContaBancaria.OperacaoConta; //código do posto beneficiário (pp)
 
             if (string.IsNullOrEmpty(posto))
@@ -76,10 +99,17 @@ namespace BoletoNetCore
                 throw new Exception($"Posto beneficiário não preenchido");
             }
 
-            string beneficiario = boleto.Banco.Beneficiario.Codigo;                    //código do beneficiário (ccccc)
+            //código do beneficiário (ccccc)
+            string beneficiario = boleto.Banco.Beneficiario.Codigo.Trim();
+            if (!string.IsNullOrEmpty(boleto.Banco.Beneficiario.CodigoDV))
+            {
+                beneficiario = beneficiario
+                    + boleto.Banco.Beneficiario.CodigoDV.Trim();
+            }
+
             string nossoNumero = boleto.NossoNumero;                         //ano atual (yy), indicador de geração do nosso número (b) e o número seqüencial do beneficiário (nnnnn);
 
-            return string.Concat(agencia, posto, beneficiario, nossoNumero); // = aaaappcccccyybnnnnn
+            return string.Concat(agencia.Substring(agencia.Length - 4, 4), posto, beneficiario, nossoNumero); // = aaaappcccccyybnnnnn
         }
     }
 }

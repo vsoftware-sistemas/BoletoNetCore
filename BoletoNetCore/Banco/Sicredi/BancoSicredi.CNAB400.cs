@@ -14,6 +14,8 @@ namespace BoletoNetCore
             //  A = 'A' - SICREDI com Registro
             // C1 = 'C' - SICREDI sem Registro Impressão Completa pelo Sicredi
             // C2 = 'C' - SICREDI sem Registro Pedido de bloquetos pré-impressos
+
+            registro++;
             if (boleto.VariacaoCarteira.Equals("A"))
                 detalhe = GerarDetalheRemessaCNAB400_A(boleto, registro);
             else if (boleto.VariacaoCarteira.Equals("C1"))
@@ -28,6 +30,7 @@ namespace BoletoNetCore
             try
             {
                 TRegistroEDI reg = new TRegistroEDI();
+                numeroRegistroGeral++;
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "0", ' '));                             //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 001, 0, "1", ' '));                             //002-002
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0003, 007, 0, "REMESSA", ' '));                       //003-009
@@ -62,6 +65,7 @@ namespace BoletoNetCore
         {
             try
             {
+                numeroRegistroGeral++;
                 TRegistroEDI reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "9", ' '));                         //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 001, 0, "1", ' '));                         //002-002
@@ -88,7 +92,6 @@ namespace BoletoNetCore
             try
             {
                 //string NumeroDocumento = boleto.NossoNumero;
-
                 TRegistroEDI reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "1", ' '));                                                    //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 001, 0, "A", ' '));                                                    //002-002  'A' - SICREDI com Registro

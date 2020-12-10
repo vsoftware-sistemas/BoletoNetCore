@@ -27,6 +27,11 @@ namespace BoletoNetCore
             if (LogradouroEndereco.Length + logradouroCompleto.Length <= tamanhoFinal)
                 return LogradouroEndereco + logradouroCompleto;
 
+            if (logradouroCompleto.Length >= tamanhoFinal) 
+            {
+                logradouroCompleto = logradouroCompleto.Substring(0, tamanhoFinal);
+            }
+
             return LogradouroEndereco.Substring(0, tamanhoFinal - logradouroCompleto.Length) + logradouroCompleto;
         }
     }

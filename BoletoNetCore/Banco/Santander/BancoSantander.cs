@@ -33,7 +33,7 @@ namespace BoletoNetCore
 
         public override string FormatarNomeArquivoRemessa(int numeroSequencial)
         {
-            return "";
+            return $"{ numeroSequencial }";
         }
 
        

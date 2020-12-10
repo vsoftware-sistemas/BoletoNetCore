@@ -33,7 +33,7 @@ namespace BoletoNetCore
 
         public virtual string FormatarNomeArquivoRemessa(int numeroSequencial)
         {
-            return string.Empty;
+            return $"{ numeroSequencial }";
         }
 
         public virtual string GerarDetalheRemessa(TipoArquivo tipoArquivo, Boleto boleto, ref int numeroRegistro)
